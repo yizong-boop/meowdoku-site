@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#fffaf3" />
+  <title>Meowdoku · 产品需求与研发蓝图</title>
+  <style>
+    :root {
+      --paper: #fffaf3;
+      --surface: #ffffff;
+      --surface-2: #fff4e7;
+      --ink: #263238;
+      --muted: #77828a;
+      --line: #eee5d9;
+      --orange: #f28b57;
+      --orange-2: #ffb66e;
+      --peach: #ffe2c7;
+      --green: #75b88c;
+      --green-bg: #eaf7ed;
+      --blue: #719dc8;
+      --blue-bg: #eaf3fb;
+      --violet: #9a8ac7;
+      --shadow: 0 16px 50px rgba(103, 75, 43, .10);
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.72;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    .app { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100vh; }
+    .sidebar {
+      position: sticky; top: 0; height: 100vh; padding: 28px 20px;
+      border-right: 1px solid var(--line); background: rgba(255,250,243,.88); backdrop-filter: blur(18px);
+      overflow: auto;
+    }
+    .brand { display: flex; gap: 12px; align-items: center; padding: 4px 8px 28px; }
+    .brand img { width: 46px; height: 46px; border-radius: 15px; box-shadow: 0 8px 20px rgba(242,139,87,.22); }
+    .brand b { display: block; font-size: 18px; letter-spacing: .02em; }
+    .brand span { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+    .side-label { padding: 0 10px; margin: 18px 0 8px; color: #a49b90; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .nav a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin: 2px 0; border-radius: 12px; color: #68737a; font-size: 13px; transition: .2s ease; }
+    .nav a:hover, .nav a.active { color: #9b552b; background: var(--peach); transform: translateX(2px); }
+    .nav i { width: 22px; color: var(--orange); font-style: normal; text-align: center; }
+    .side-note { margin: 26px 6px 0; padding: 14px; border-radius: 16px; background: #fff1dc; color: #8b6b4d; font-size: 12px; }
+    .side-note strong { display: block; margin-bottom: 4px; color: #704d2f; }
+    .content { min-width: 0; }
+    .topbar { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 14px clamp(20px, 5vw, 70px); border-bottom: 1px solid rgba(238,229,217,.8); background: rgba(255,250,243,.82); backdrop-filter: blur(18px); }
+    .crumb { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .search { position: relative; width: min(360px, 46vw); }
+    .search input { width: 100%; padding: 10px 14px 10px 38px; border: 1px solid var(--line); border-radius: 999px; outline: none; color: var(--ink); background: #fff; font-size: 13px; }
+    .search input:focus { border-color: var(--orange-2); box-shadow: 0 0 0 4px rgba(255,182,110,.18); }
+    .search span { position: absolute; left: 14px; top: 7px; color: var(--orange); font-size: 16px; }
+    .hero { position: relative; max-width: 1250px; margin: 0 auto; padding: clamp(52px, 8vw, 100px) clamp(20px, 5vw, 70px) 70px; overflow: hidden; }
+    .hero::after { content: ""; position: absolute; width: 420px; height: 420px; border-radius: 50%; right: -150px; top: -120px; background: radial-gradient(circle, #ffe3bd 0, rgba(255,227,189,0) 70%); pointer-events: none; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: #a56139; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 24px; height: 3px; border-radius: 3px; background: var(--orange); }
+    h1 { max-width: 780px; margin: 14px 0 18px; font-size: clamp(38px, 6vw, 74px); line-height: 1.08; letter-spacing: -.055em; }
+    .hero p { max-width: 760px; margin: 0; color: #68737a; font-size: clamp(16px, 2vw, 19px); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; border: 0; border-radius: 999px; cursor: pointer; font-size: 13px; font-weight: 750; transition: .2s ease; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(128,87,48,.12); }
+    .btn.primary { color: #fff; background: linear-gradient(135deg, #f18a55, #f5a868); }
+    .btn.ghost { color: #8b633f; background: #fff; border: 1px solid var(--line); }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 30px; align-items: end; margin-top: 44px; }
+    .hero-art { position: relative; min-height: 230px; padding: 20px; border: 1px solid #f4dfc6; border-radius: 30px; background: linear-gradient(145deg, #fff1d8, #fffaf2); overflow: hidden; }
+    .hero-art::before, .hero-art::after { content: ""; position: absolute; border: 2px solid rgba(242,139,87,.15); transform: rotate(22deg); }
+    .hero-art::before { width: 330px; height: 330px; right: -120px; bottom: -210px; }
+    .hero-art::after { width: 240px; height: 240px; right: -45px; bottom: -160px; }
+    .hero-art img { position: absolute; left: 22px; bottom: -18px; width: 240px; height: 240px; object-fit: contain; filter: drop-shadow(0 18px 18px rgba(109,71,43,.14)); }
+    .hero-art .speech { position: absolute; right: 22px; top: 28px; max-width: 230px; padding: 12px 15px; border-radius: 16px 16px 5px 16px; color: #8d5b37; background: #fff; box-shadow: var(--shadow); font-size: 13px; }
+    .hero-art .speech b { display: block; color: #5b4535; font-size: 16px; }
+    .hero-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .fact { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: 0 8px 24px rgba(87,68,44,.04); }
+    .fact strong { display: block; color: var(--orange); font-size: 25px; line-height: 1; }
+    .fact span { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; }
+    .section { max-width: 1110px; margin: 0 auto; padding: 52px clamp(20px, 5vw, 70px); scroll-margin-top: 70px; }
+    .section.alt { max-width: none; background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .section-inner { max-width: 1110px; margin: auto; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 26px; }
+    .section-kicker { color: var(--orange); font-size: 12px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+    h2 { margin: 6px 0 0; font-size: clamp(28px, 4vw, 42px); line-height: 1.16; letter-spacing: -.035em; }
+    h3 { margin: 30px 0 12px; font-size: 21px; line-height: 1.3; letter-spacing: -.02em; }
+    h4 { margin: 0 0 6px; font-size: 15px; }
+    .section-lead { max-width: 690px; color: var(--muted); font-size: 14px; }
+    .anchor { color: #bd8d66; font-size: 12px; opacity: 0; transition: .2s; }
+    h2:hover .anchor, h3:hover .anchor { opacity: 1; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .card { padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: 0 8px 24px rgba(87,68,44,.04); }
+    .card.soft { border-color: transparent; background: var(--surface-2); box-shadow: none; }
+    .card.blue { border-color: #d9e8f5; background: var(--blue-bg); }
+    .card.green { border-color: #d7ebdb; background: var(--green-bg); }
+    .card p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+    .icon-card { display: flex; gap: 14px; align-items: flex-start; }
+    .icon-card img { flex: 0 0 auto; width: 52px; height: 52px; object-fit: contain; border-radius: 14px; background: rgba(255,255,255,.8); }
+    .tag { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 999px; color: #906039; background: #fff0dc; font-size: 11px; font-weight: 800; }
+    .tag.green { color: #477c58; background: #e5f4e8; }
+    .tag.blue { color: #4c7296; background: #e3f0fb; }
+    .tag.gray { color: #768087; background: #f0f2f3; }
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 18px 0; }
+    .flow .step { padding: 10px 13px; border: 1px solid var(--line); border-radius: 12px; color: #6f5a48; background: #fff; font-size: 12px; font-weight: 750; }
+    .flow .arrow { color: var(--orange); font-weight: 900; }
+    .rule-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+    .rule-list li { display: grid; grid-template-columns: 24px 1fr; gap: 9px; align-items: start; color: #69757c; font-size: 13px; }
+    .rule-list li::before { content: "✓"; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 8px; color: #fff; background: var(--green); font-size: 12px; font-weight: 900; }
+    .callout { display: flex; gap: 12px; align-items: flex-start; margin: 18px 0; padding: 16px 18px; border-left: 4px solid var(--orange); border-radius: 0 15px 15px 0; background: #fff2df; color: #76593e; font-size: 13px; }
+    .callout strong { display: block; margin-bottom: 2px; color: #593f2b; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+    table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 13px; }
+    th { color: #8a745f; background: #fff6eb; font-size: 11px; letter-spacing: .04em; text-align: left; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #f2ebe2; vertical-align: top; }
+    tr:last-child td { border-bottom: 0; }
+    td { color: #69757c; }
+    td:first-child { color: #3b454b; font-weight: 700; }
+    .board-demo { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; width: 100%; max-width: 340px; min-width: 0; margin: 12px auto 4px; padding: 8px; border-radius: 18px; background: #dfe7dc; box-shadow: inset 0 0 0 1px rgba(85,106,75,.12); overflow: hidden; }
+    .cell { position: relative; min-width: 0; width: 100%; aspect-ratio: 1; display: grid; place-items: center; padding: 0; border: 0; border-radius: 6px; color: #fff; cursor: pointer; transition: transform .16s, filter .16s; }
+    .cell:hover { transform: scale(1.07); filter: brightness(1.08); z-index: 1; }
+    .cell:nth-child(8n+1), .cell:nth-child(8n+2), .cell:nth-child(8n+3) { background: #d8c69e; }
+    .cell:nth-child(8n+4), .cell:nth-child(8n+5) { background: #b9d0a0; }
+    .cell:nth-child(8n+6), .cell:nth-child(8n+7), .cell:nth-child(8n) { background: #b9c9dc; }
+    .cell.cat::after { content: "🐈"; font-size: clamp(15px, 3vw, 26px); filter: drop-shadow(0 2px 2px rgba(0,0,0,.18)); }
+    .cell.mark::before { content: "×"; position: absolute; color: rgba(123,65,55,.55); font-size: 25px; font-weight: 800; }
+    .board-note { text-align: center; color: var(--muted); font-size: 12px; }
+    .timeline { position: relative; display: grid; gap: 16px; margin: 16px 0; }
+    .timeline::before { content: ""; position: absolute; left: 16px; top: 17px; bottom: 17px; width: 2px; background: #f2d8b8; }
+    .timeline-item { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 12px; }
+    .timeline-dot { z-index: 1; display: grid; place-items: center; width: 34px; height: 34px; border: 5px solid var(--paper); border-radius: 50%; color: #fff; background: var(--orange); font-size: 12px; font-weight: 800; }
+    .timeline-item .card { padding: 14px 16px; }
+    .stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 18px 0; }
+    .stat { padding: 15px; border-radius: 15px; background: #fff7ee; text-align: center; }
+    .stat strong { display: block; color: #9c5a32; font-size: 22px; line-height: 1.1; }
+    .stat span { color: var(--muted); font-size: 11px; }
+    .asset-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .asset { min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 16px; background: #fff; text-align: center; }
+    .asset img { display: block; width: 100%; height: 92px; object-fit: contain; border-radius: 10px; background: #fff8ef; }
+    .asset b { display: block; margin-top: 7px; color: #59656b; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .asset small { display: block; color: #9ca3a7; font-size: 10px; }
+    .audio-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .audio { display: flex; gap: 10px; align-items: center; padding: 12px; border-radius: 14px; background: #fff8ef; }
+    .audio-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 12px; color: #fff; background: linear-gradient(135deg, var(--violet), #c8b9e8); }
+    .audio b { display: block; color: #5b5b67; font-size: 12px; }
+    .audio span { display: block; color: #9a9ca6; font-size: 10px; }
+    .qa { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .qa:last-child { border-bottom: 0; }
+    .qa p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .footer { padding: 36px 20px 54px; color: #9b948c; text-align: center; font-size: 12px; }
+    .hidden { display: none !important; }
+    .search-empty { max-width: 900px; margin: 20px auto; padding: 30px; border: 1px dashed #e4d4c0; border-radius: 18px; color: var(--muted); text-align: center; }
+    @media (max-width: 960px) {
+      .app { display: block; }
+      .sidebar { position: static; height: auto; padding: 14px 18px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand { padding-bottom: 12px; }
+      .side-label, .side-note { display: none; }
+      .nav { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; }
+      .nav a { flex: 0 0 auto; white-space: nowrap; }
+      .topbar { top: 0; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .asset-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .topbar { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .search { width: 100%; }
+      .hero { padding-top: 42px; }
+      .hero-facts, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .stat-strip { grid-template-columns: repeat(2, 1fr); }
+      .asset-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .audio-list { grid-template-columns: 1fr; }
+      h1 { font-size: 43px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <a class="brand" href="#top">
+        <img src="assets/icon.png" alt="Meowdoku icon" />
+        <span><b>Meowdoku</b><span>产品需求与研发蓝图</span></span>
+      </a>
+      <div class="side-label">Contents</div>
+      <nav class="nav" id="nav">
+        <a href="#overview"><i>✦</i> 项目总览</a>
+        <a href="#core"><i>♟</i> 主玩法</a>
+        <a href="#outer"><i>◒</i> 外围玩法</a>
+        <a href="#quality"><i>⌁</i> 多语言 / 性能</a>
+        <a href="#business"><i>◈</i> 商业化</a>
+        <a href="#backend"><i>⌘</i> 服务端与配置</a>
+        <a href="#qa"><i>✓</i> 研发验收</a>
+      </nav>
+      <div class="side-label">Quick links</div>
+      <nav class="nav">
+        <a href="#assets"><i>▧</i> 资源预览</a>
+        <a href="#audio"><i>♫</i> 音频清单</a>
+        <a href="#not-included"><i>—</i> 当前不包含</a>
+      </nav>
+      <div class="side-note"><strong>阅读建议</strong>先看总览和主玩法，再按“页面 → 规则 → 配置 → 验收”顺序阅读。这里的内容可以直接拆成产品、客户端、QA 和运营任务。</div>
+    </aside>
+
+    <div class="content" id="top">
+      <header class="topbar">
+        <div class="crumb">Meowdoku / v1.0.0 / Product Brief</div>
+        <label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜索玩法、Daily、广告、存档…" /></label>
+      </header>
+
+      <section class="hero" id="overview" data-search="项目总览 产品背景 Android 竖屏 猫咪 逻辑拼图">
+        <div class="eyebrow">Product requirement · 研发蓝图</div>
+        <h1>把每一步推理，<br /><em style="font-style:normal;color:var(--orange)">放进猫咪的棋盘里。</em></h1>
+        <p>Meowdoku 是一款猫咪主题的轻量逻辑拼图。玩家在不同尺寸的棋盘上放置猫咪，逐步满足行、列、相邻和颜色区域规则；主线负责成长，Daily 负责每天回来。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#core">从主玩法开始 →</a>
+          <a class="btn ghost" href="#assets">查看资源预览</a>
+        </div>
+        <div class="hero-grid">
+          <div class="hero-art">
+            <img src="assets/cat-victory.png" alt="胜利猫咪资源" />
+            <div class="speech"><b>轻松开始，逐步变难</b>每个关卡都应该让玩家感觉“下一步我能想出来”。</div>
+          </div>
+          <div class="hero-facts">
+            <div class="fact"><strong>4—12</strong><span>棋盘尺寸范围</span></div>
+            <div class="fact"><strong>75</strong><span>可用语言资源</span></div>
+            <div class="fact"><strong>3</strong><span>核心道具：Hint / Locate / Undo</span></div>
+            <div class="fact"><strong>60</strong><span>客户端目标 FPS 上限</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" data-search="产品信息 范围 产品结构 Android 离线 商业模式">
+        <div class="section-inner">
+          <div class="section-head"><div><div class="section-kicker">01 · Product shape</div><h2>先统一产品边界</h2></div><span class="tag green">首版范围</span></div>
+          <div class="grid-3">
+            <div class="card"><span class="tag">定位</span><h4>猫咪主题逻辑拼图</h4><p>轻量、治愈、可持续游玩。核心差异来自规则推理、猫咪表现和每日回访。</p></div>
+            <div class="card"><span class="tag blue">平台</span><h4>Android 竖屏</h4><p>首版重点保证手机和平板竖屏可用，横屏和分屏暂不纳入。</p></div>
+            <div class="card"><span class="tag green">内容</span><h4>本地题库 + Daily</h4><p>题目随应用资源包发布，离线也能游玩；Daily 根据日期确定性选择。</p></div>
+          </div>
+          <div class="table-wrap" style="margin-top:16px"><table><thead><tr><th>产品区域</th><th>首版要回答的问题</th><th>状态</th></tr></thead><tbody>
+            <tr><td>主线</td><td>玩家如何理解规则、完成一关、进入下一关？</td><td><span class="tag green">核心</span></td></tr>
+            <tr><td>Daily</td><td>玩家如何每天打开、挑战、完成并看到自己的表现？</td><td><span class="tag green">核心</span></td></tr>
+            <tr><td>外围</td><td>设置、教程、连胜、反馈是否让产品更完整？</td><td><span class="tag blue">配套</span></td></tr>
+            <tr><td>商业化</td><td>广告如何换取道具和复活，同时不阻断主玩法？</td><td><span class="tag blue">配套</span></td></tr>
+            <tr><td>暂不做</td><td>在线排行榜、赛季、CMS 实时关卡、内购、账号云存档</td><td><span class="tag gray">范围外</span></td></tr>
+          </tbody></table></div>
+        </div>
+      </section>
+
+      <section class="section" id="core" data-search="主玩法 规则 棋盘 猫咪 行 列 相邻 颜色 关卡 难度 题库 道具 存档">
+        <div class="section-head"><div><div class="section-kicker">02 · Core loop</div><h2>主玩法：每一步都可解释</h2><div class="section-lead">核心目标不是让玩家“试出来”，而是让每次正确放置都能被规则支持。错误应当有反馈，但不能让玩家迷失。</div></div><span class="tag green">P0 · 必须稳定</span></div>
+        <h3>2.1 一局游戏怎么发生 <a class="anchor" href="#core">#</a></h3>
+        <div class="flow"><span class="step">Home</span><span class="arrow">→</span><span class="step">Play Level</span><span class="arrow">→</span><span class="step">棋盘加载</span><span class="arrow">→</span><span class="step">放置 / 标记 / 道具</span><span class="arrow">→</span><span class="step">Win / Fail</span><span class="arrow">→</span><span class="step">下一关或恢复</span></div>
+        <div class="grid-2">
+          <div class="card soft"><h4>玩家要做什么</h4><ul class="rule-list"><li>在每一行放置一只猫，最终总数等于棋盘尺寸。</li><li>用行、列、相邻和区域关系排除不可能位置。</li><li>生命耗尽进入失败页；完成所有行进入完成页。</li><li>退出后再次进入，继续当前残局而不是从零开始。</li></ul></div>
+          <div class="card"><h4>棋盘规则</h4><div class="board-demo" id="boardDemo" aria-label="可点击的棋盘示例"></div><div class="board-note">点击格子：放置猫咪；再次点击：移除。颜色代表不同区域。</div></div>
+        </div>
+        <div class="callout"><div>✦</div><div><strong>研发交互原则</strong>错误放置要明确告诉玩家“为什么不行”，但不要把错误变成复杂惩罚。主玩法的节奏应该来自推理，而不是反复试错。</div></div>
+
+        <h3>2.2 规则和棋盘尺寸 <a class="anchor" href="#core">#</a></h3>
+        <div class="table-wrap"><table><thead><tr><th>规则</th><th>要求</th><th>玩家感知</th></tr></thead><tbody>
+          <tr><td>行</td><td>每行最多一只猫，完成时每行恰好一只</td><td>同一行其他位置被排除</td></tr>
+          <tr><td>列</td><td>同一列不能出现两只猫</td><td>纵向冲突有明确反馈</td></tr>
+          <tr><td>相邻</td><td>上下、左右、四个对角位置不能同时放猫</td><td>八邻域位置被排除</td></tr>
+          <tr><td>颜色区域</td><td>同一颜色区域内不能出现两只猫</td><td>区域规则需要在棋盘上容易识别</td></tr>
+        </tbody></table></div>
+        <div class="stat-strip"><div class="stat"><strong>4—7</strong><span>前期尺寸</span></div><div class="stat"><strong>8—10</strong><span>中后期尺寸</span></div><div class="stat"><strong>12</strong><span>高阶 Daily 尺寸</span></div><div class="stat"><strong>7</strong><span>策略档位上限</span></div></div>
+        <div class="table-wrap"><table><thead><tr><th>关卡</th><th>默认节奏</th><th>设计目的</th></tr></thead><tbody>
+          <tr><td>1—10</td><td>4、4、5、5、6、5、5、6、6、7</td><td>先理解规则，再逐渐引入更大棋盘</td></tr>
+          <tr><td>11—20</td><td>6、6、6、6、7、6、7、6、7、8</td><td>建立稳定的中前期习惯</td></tr>
+          <tr><td>21—50</td><td>6、7、6、7、8、6、7、8、7、8 循环</td><td>增加节奏变化，并开放更多外围能力</td></tr>
+          <tr><td>51—100</td><td>6、7、8、7、9、6、7、8、9、10 循环</td><td>进入中后期，出现更高难度题型</td></tr>
+          <tr><td>101+</td><td>7、8、7、9、10、7、8、9、8、10 循环</td><td>保持长期成长和尺寸变化</td></tr>
+        </tbody></table></div>
+
+        <h3>2.3 动态难度与题库 <a class="anchor" href="#core">#</a></h3>
+        <div class="grid-3">
+          <div class="card"><span class="tag">Rank</span><h4>题目难度</h4><p>Rank 1—5 表示题目复杂度，tier 区分普通和困难层。</p></div>
+          <div class="card"><span class="tag blue">DDA</span><h4>玩家适配</h4><p>干净通关推动升档，失败、重试、复活和道具行为可按配置影响降档。</p></div>
+          <div class="card"><span class="tag green">硬关</span><h4>固定节奏点</h4><p>在固定关卡提高题目挑战，给长期玩家明确的阶段感。</p></div>
+        </div>
+        <p style="color:var(--muted);font-size:13px">题目数据包含区域地图、解答、难度和提示参考值。进入游戏前必须完成合法性检查；无效题目应自动跳过，不能把题库问题暴露给玩家。</p>
+
+        <h3>2.4 道具、草稿和自动标记 <a class="anchor" href="#core">#</a></h3>
+        <div class="grid-3">
+          <div class="card icon-card"><img src="assets/hint-lamp.png" alt="Hint" /><div><span class="tag">Hint</span><h4>给出一步推理</h4><p>高亮当前可理解的下一步，不直接展示整局答案。</p></div></div>
+          <div class="card icon-card"><img src="assets/locate-light.png" alt="Locate" /><div><span class="tag blue">Locate</span><h4>定位正确位置</h4><p>揭示一个可放置的正确位置，帮助玩家继续游戏。</p></div></div>
+          <div class="card icon-card"><img src="assets/undo.png" alt="Undo" /><div><span class="tag green">Undo</span><h4>撤销最近操作</h4><p>普通关和 Daily 共享库存，AB 可配置为免费。</p></div></div>
+        </div>
+        <div class="grid-2" style="margin-top:16px"><div class="card soft"><h4>草稿模式</h4><p>中后段开放。玩家记录候选位置，支持冲突检测、提交、清除和按配置恢复。</p></div><div class="card soft"><h4>自动标记</h4><p>根据已放置猫咪自动标记不可用位置，首次使用展示引导；Daily 可配置为激励视频解锁。</p></div></div>
+
+        <h3>2.5 生命、连击和结算 <a class="anchor" href="#core">#</a></h3>
+        <div class="grid-2"><div class="card"><div class="icon-card"><img src="assets/heart-full.png" alt="生命" /><div><h4>生命系统</h4><p>每局默认 3 条生命。错误放置扣除生命，耗尽后进入 Fail；失败页可通过激励视频复活，生命不超过 3 条。</p></div></div></div><div class="card"><h4>连击反馈</h4><div class="flow"><span class="tag">1—4 Good</span><span class="tag">5 Nice</span><span class="tag blue">7+ Excellent</span><span class="tag green">9+ Perfect</span></div><p>连击只影响局内音效、文字、粒子和震动，不参与 Daily 成绩。</p></div></div>
+        <div class="timeline"><div class="timeline-item"><div class="timeline-dot">1</div><div class="card"><h4>Win 完成页</h4><p>展示完成文案、庆祝动效、用时、步数、最高连击和表现等级；普通关进入下一关，Daily 返回 Daily。</p></div></div><div class="timeline-item"><div class="timeline-dot">2</div><div class="card"><h4>Fail 失败页</h4><p>提供复活、重新开始和返回。复活成功要恢复当前棋盘状态，广告失败不能阻断返回和重玩。</p></div></div><div class="timeline-item"><div class="timeline-dot">3</div><div class="card"><h4>残局恢复</h4><p>保存棋盘、猫咪位置、标记、生命、步数、连击和复活状态；异常退出后不丢奖励、不重复发奖。</p></div></div></div>
+      </section>
+
+      <section class="section alt" id="outer" data-search="外围玩法 Splash Tutorial Home Daily Settings 连胜 奖励 反馈 音效 动效">
+        <div class="section-inner"><div class="section-head"><div><div class="section-kicker">03 · Return loop</div><h2>外围玩法：让玩家愿意回来</h2><div class="section-lead">外围系统不应该抢走主玩法的注意力，而应该负责第一次理解、每天回来、完成后获得反馈和遇到问题时有出口。</div></div><span class="tag blue">P0 / P1</span></div>
+        <h3>3.1 页面全景</h3>
+        <div class="grid-3">
+          <div class="card"><span class="tag">启动</span><h4>Splash</h4><p>Logo、加载状态、背景音乐初始化，首次启动后进入 Tutorial。</p></div>
+          <div class="card"><span class="tag">入口</span><h4>Home</h4><p>主线关卡、Daily、连胜和设置的中心入口。</p></div>
+          <div class="card"><span class="tag">玩法</span><h4>Game / Daily</h4><p>普通关和每日挑战共享棋盘逻辑，使用不同的进度和计时。</p></div>
+          <div class="card"><span class="tag green">结果</span><h4>Win / Fail</h4><p>完成、失败、复活、继续和回到入口的状态承接。</p></div>
+          <div class="card"><span class="tag blue">关系</span><h4>Streak</h4><p>7 日签到、奖励、直接领取和广告翻倍。</p></div>
+          <div class="card"><span class="tag gray">辅助</span><h4>Settings / Feedback</h4><p>声音、震动、语言、教程、帮助中心、评分和隐私入口。</p></div>
+        </div>
+        <h3>3.2 Home 首页</h3>
+        <div class="grid-2"><div class="card"><h4>首页必须展示</h4><ul class="rule-list"><li>当前主线关卡卡片、关卡编号、难度状态和 Play 按钮。</li><li>Daily 的锁定、可挑战、已完成状态和日期。</li><li>连胜入口、当前连胜和可领取奖励提示。</li><li>设置按钮，以及待补发奖励、AB 切换等必要弹窗。</li></ul></div><div class="card soft"><h4>完成后的变化</h4><p>普通关 Continue 后，Play Level 进入下一关；Daily Continue 后回到 Daily 状态；连胜和奖励弹层不应覆盖下一次正常操作。</p></div></div>
+        <h3>3.3 Daily 每日挑战</h3>
+        <div class="card soft"><h4>页面素材待补</h4><p>Daily 页面建议补充：Daily 首页、日期选择、开始挑战、完成状态和成绩展示五类真机截图。当前页面先保留流程与数据规则，避免使用不对应的运行截图造成误导。</p></div>
+        <div class="table-wrap" style="margin-top:18px"><table><thead><tr><th>主线进度</th><th>默认 Daily 题库</th><th>棋盘</th><th>体验重点</th></tr></thead><tbody><tr><td>100 关以内</td><td>普通 10×10 / Rank 3</td><td>10×10</td><td>高难但规则一致</td></tr><tr><td>101—200 关</td><td>普通 10×10 / Rank 4</td><td>10×10</td><td>稳定挑战</td></tr><tr><td>200 关以后</td><td>LKStyle 12×12 / Rank 4</td><td>12×12</td><td>长期内容</td></tr></tbody></table></div>
+        <div class="callout"><div>◷</div><div><strong>Daily 成绩的产品口径</strong>成绩百分比根据完成用时、题目难度和棋盘尺寸计算，保存在本地并用于完成页展示。当前版本不包含在线排行榜、赛季或 Bot 分组。</div></div>
+        <h3>3.4 连胜、设置和反馈</h3>
+        <div class="grid-3"><div class="card icon-card"><img src="assets/cat-streak.png" alt="连胜" /><div><h4>7 日连胜</h4><p>当天完成符合条件的普通关或 Daily 后签到；漏签超过一天清除当前连胜。</p></div></div><div class="card icon-card"><img src="assets/chest.png" alt="奖励宝箱" /><div><h4>第 7 日奖励</h4><p>Hint ×2 + Locate ×2，支持直接领取或广告翻倍。</p></div></div><div class="card"><h4>设置与反馈</h4><p>Music、Sound、Vibration、Language、Coords、规则栏、How To Play、Feedback、CMP。</p></div></div>
+        <h3>3.5 音效与动效</h3><div class="grid-2"><div class="card soft"><h4>玩法反馈</h4><p>进入棋盘、放置猫、错误、道具、连击、通关、失败分别使用明确音效和轻量动画。</p></div><div class="card soft"><h4>视觉原则</h4><p>猫咪和按钮负责亲和力，棋盘负责信息清晰；庆祝动效要有反馈但不能影响下一步点击。</p></div></div>
+        </div>
+      </section>
+
+      <section class="section" id="quality" data-search="多语言 平板 调试 性能 语言 75 locale 60 FPS 资源加载">
+        <div class="section-head"><div><div class="section-kicker">04 · Quality & tooling</div><h2>多语言、平板、调试与性能</h2><div class="section-lead">这些不是“最后再补”的壳层能力：它们决定产品能否被不同地区、不同设备和测试团队稳定使用。</div></div><span class="tag blue">研发 / QA</span></div>
+        <h3>4.1 多语言</h3><div class="grid-2"><div class="card"><div class="stat-strip"><div class="stat"><strong>75</strong><span>资源 locale</span></div><div class="stat"><strong>9</strong><span>常用语言入口</span></div><div class="stat"><strong>2</strong><span>中文 locale</span></div><div class="stat"><strong>1</strong><span>系统语言优先</span></div></div><p>设置页默认展示系统语言和常用语言，测试包支持切换全部语言。切换要即时生效、重启后保持；缺失翻译回退默认语言。</p></div><div class="card soft"><h4>语言验收</h4><ul class="rule-list"><li>按钮、弹窗和广告提示不出现空白。</li><li>长文本不挤压关键操作。</li><li>英文、中文、阿拉伯语等 RTL 语言单独检查。</li><li>语言切换不重置关卡、道具或 Daily 状态。</li></ul></div></div>
+        <h3>4.2 平板与响应式布局</h3><div class="grid-3"><div class="card"><span class="tag">Portrait</span><h4>竖屏优先</h4><p>首版以 10:16 竖屏作为重点验收比例。</p></div><div class="card"><span class="tag blue">Resize</span><h4>棋盘可缩放</h4><p>棋盘随容器动态缩放，完整显示并保持触控区域可用。</p></div><div class="card"><span class="tag green">Ad safe</span><h4>广告不遮挡</h4><p>Banner 不遮挡棋盘、道具和底部操作区。</p></div></div>
+        <h3>4.3 调试面板</h3><div class="table-wrap"><table><thead><tr><th>模块</th><th>调试能力</th><th>典型使用场景</th></tr></thead><tbody><tr><td>Commands</td><td>跳关、自动通关、设置生命、增加道具、清档</td><td>快速构造正常和异常状态</td></tr><tr><td>AB Test</td><td>查看和覆盖 AB 参数</td><td>回归难度、广告、功能开关</td></tr><tr><td>Ads</td><td>广告状态、Mock、广告调试页</td><td>验证 ready、奖励、失败和补发</td></tr><tr><td>Language / Log</td><td>语言切换、日志筛选</td><td>多语言和问题定位</td></tr><tr><td>Puzzle / API</td><td>题目追踪、测试包本地接口</td><td>重复题、构造状态和自动化验收</td></tr></tbody></table></div>
+        <h3>4.4 性能与加载</h3><div class="grid-2"><div class="card"><h4>当前策略</h4><ul class="rule-list"><li>优先加载 UI，避免长时间黑屏。</li><li>题库按尺寸延迟加载并缓存。</li><li>进入下一关前预热棋盘节点。</li><li>客户端帧率上限为 60 FPS。</li><li>低内存设备按配置降低广告和资源压力。</li></ul></div><div class="card soft"><h4>验收目标</h4><ul class="rule-list"><li>放置、撤销、提示、标记和拖动无明显卡顿。</li><li>切后台、重进和关闭重开不丢状态。</li><li>弹窗、广告返回和胜利动画不造成输入错位。</li><li>当前版本不预加载后续五关图片/视频。</li></ul></div></div>
+      </section>
+
+      <section class="section alt" id="business" data-search="商业化 广告 Banner 插屏 激励 道具 复活 奖励 内购 订阅">
+        <div class="section-inner"><div class="section-head"><div><div class="section-kicker">05 · Monetization</div><h2>商业化：广告服务于体验</h2><div class="section-lead">广告的目标是给玩家一个“继续、获得、复活”的选择，而不是把主玩法切碎。所有广告失败都必须有可回退路径。</div></div><span class="tag">P1 · 收益</span></div>
+        <h3>5.1 广告位与触发场景</h3><div class="table-wrap"><table><thead><tr><th>类型</th><th>广告位</th><th>场景</th><th>用户获得</th></tr></thead><tbody><tr><td>Banner</td><td>banner</td><td>玩法页展示，受门槛和设备条件控制</td><td>无直接奖励</td></tr><tr><td>插屏</td><td>start / restart / continue / sleep</td><td>进入、重开、继续或回前台</td><td>流程曝光</td></tr><tr><td>激励</td><td>props_* / autox_reward</td><td>道具不足或 Daily 自动标记</td><td>Hint / Locate / Undo / Auto-Mark</td></tr><tr><td>激励</td><td>fail_revive</td><td>失败页</td><td>恢复生命并继续当前局</td></tr><tr><td>激励</td><td>streak_x2_reward</td><td>连胜第 7 日奖励</td><td>奖励翻倍</td></tr></tbody></table></div>
+        <h3>5.2 广告策略</h3><div class="grid-3"><div class="card"><h4>保护</h4><p>新用户、低关卡、低内存设备和高频场景可关闭或延迟广告。</p></div><div class="card"><h4>频控</h4><p>插屏有展示概率、会话门槛和全局冷却，避免连续打断。</p></div><div class="card"><h4>兜底</h4><p>广告未 ready、初始化失败或回调失败时不阻断游戏。</p></div></div>
+        <h3>5.3 奖励到账</h3><div class="flow"><span class="step">创建奖励</span><span class="arrow">→</span><span class="step">广告展示</span><span class="arrow">→</span><span class="step">有效回调</span><span class="arrow">→</span><span class="step">动画中转</span><span class="arrow">→</span><span class="step">正式入账</span></div><div class="callout"><div>↻</div><div><strong>核心原则：不丢、不重</strong>奖励使用展示 ID 关联广告展示和回调。异常退出进入中转队列；展示后超时未回调时，按配置进入待补发奖励页，并受每日恢复次数限制。</div></div>
+        <h3>5.4 内购范围</h3><div class="card soft"><span class="tag gray">当前版本不包含</span><p>当前版本不提供商品列表、购买页、购买按钮、恢复购买或订阅权益。未来接入需要单独补充商品 ID、地区价格、服务端校验、权益持久化、退款和恢复购买方案。</p></div>
+        </div>
+      </section>
+
+      <section class="section" id="backend" data-search="服务端 配置 CMS 埋点 AB 远程 统计 客服 隐私 离线">
+        <div class="section-head"><div><div class="section-kicker">06 · Configuration & data</div><h2>服务端与配置：当前简单，未来可扩展</h2><div class="section-lead">首版不把本地题库包装成不存在的 CMS。先保证离线可玩，再为远程配置、广告和统计留下清晰边界。</div></div><span class="tag green">Offline first</span></div>
+        <h3>6.1 当前内容方案</h3><div class="grid-2"><div class="card"><h4>题目</h4><p>普通关和 Daily 题目随应用资源包发布。客户端无需请求关卡接口，离线可以加载已有题目。</p></div><div class="card"><h4>题目更新</h4><p>当前通过应用或资源包更新。实时换题、题库灰度和运营后台属于后续 CMS 范围。</p></div></div>
+        <h3>6.2 远程配置</h3><div class="table-wrap"><table><thead><tr><th>配置组</th><th>控制内容</th><th>失败时</th></tr></thead><tbody><tr><td>难度</td><td>尺寸周期、rank 随机、DDA、硬关、Daily 首关</td><td>使用本地默认值</td></tr><tr><td>功能</td><td>草稿、自动标记、免费道具、连胜</td><td>维持安全默认状态</td></tr><tr><td>广告</td><td>门槛、概率、冷却、设备保护、复活和补发</td><td>不阻断主玩法</td></tr><tr><td>合规</td><td>CMP、隐私、地区和 SDK 初始化</td><td>按本地合规默认值处理</td></tr></tbody></table></div>
+        <h3>6.3 埋点最小集合</h3><div class="grid-3"><div class="card"><h4>启动与页面</h4><p>app_open、splash、screen_show、btn_click，记录版本、语言、来源和页面。</p></div><div class="card"><h4>游戏</h4><p>game_start、game_end、restart、prop_use，记录游戏类型、关卡、题目、用时、步数和结果。</p></div><div class="card"><h4>商业化</h4><p>ad_show、ad_reward、ad_error，记录广告位、场景、展示 ID 和错误信息。</p></div></div>
+        <h3>6.4 后续 CMS 需要解决什么</h3><div class="grid-2"><div class="card soft"><h4>内容管理</h4><p>题目 ID、题库版本、适用平台、生效时间、难度、区域数据、解答数据、审核和撤回。</p></div><div class="card soft"><h4>分发安全</h4><p>签名、缓存、灰度、回滚、下载失败兜底、版本过期和防作弊。</p></div></div>
+      </section>
+
+      <section class="section alt" id="assets" data-search="资源 图片 猫咪 胜利 道具 生命 预览 截图">
+        <div class="section-inner"><div class="section-head"><div><div class="section-kicker">07 · Asset library</div><h2>实际资源预览</h2><div class="section-lead">以下素材来自当前应用资源包，帮助产品、设计和研发快速建立视觉共识。点击图片可以在浏览器中查看大图；合适的真机页面截图后续再补入。</div></div><span class="tag blue">APK assets</span></div>
+        <div class="asset-grid">
+          <a class="asset" href="assets/icon.png" target="_blank"><img src="assets/icon.png" alt="App icon" /><b>App icon</b><small>产品识别</small></a>
+          <a class="asset" href="assets/logo.png" target="_blank"><img src="assets/logo.png" alt="Logo" /><b>Logo</b><small>启动与品牌</small></a>
+          <a class="asset" href="assets/cat-victory.png" target="_blank"><img src="assets/cat-victory.png" alt="Victory cat" /><b>Cat victory</b><small>完成页</small></a>
+          <a class="asset" href="assets/cat-streak.png" target="_blank"><img src="assets/cat-streak.png" alt="Streak cat" /><b>Cat streak</b><small>连胜</small></a>
+          <a class="asset" href="assets/cat-avatar.png" target="_blank"><img src="assets/cat-avatar.png" alt="Cat avatar" /><b>Cat avatar</b><small>头像资源</small></a>
+          <a class="asset" href="assets/hint-lamp.png" target="_blank"><img src="assets/hint-lamp.png" alt="Hint lamp" /><b>Hint lamp</b><small>提示道具</small></a>
+          <a class="asset" href="assets/locate-light.png" target="_blank"><img src="assets/locate-light.png" alt="Locate" /><b>Locate</b><small>定位道具</small></a>
+          <a class="asset" href="assets/undo.png" target="_blank"><img src="assets/undo.png" alt="Undo" /><b>Undo</b><small>撤销道具</small></a>
+          <a class="asset" href="assets/heart-full.png" target="_blank"><img src="assets/heart-full.png" alt="Heart full" /><b>Heart full</b><small>生命</small></a>
+          <a class="asset" href="assets/heart-dim.png" target="_blank"><img src="assets/heart-dim.png" alt="Heart dim" /><b>Heart dim</b><small>生命耗尽</small></a>
+          <a class="asset" href="assets/chest.png" target="_blank"><img src="assets/chest.png" alt="Chest" /><b>Chest</b><small>签到奖励</small></a>
+          <a class="asset" href="assets/confetti.png" target="_blank"><img src="assets/confetti.png" alt="Confetti" /><b>Confetti</b><small>通关庆祝</small></a>
+          <a class="asset" href="assets/hard.png" target="_blank"><img src="assets/hard.png" alt="Hard label" /><b>Hard</b><small>难度标识</small></a>
+          <a class="asset" href="assets/auto-mark.png" target="_blank"><img src="assets/auto-mark.png" alt="Auto mark" /><b>Auto mark</b><small>自动标记</small></a>
+          <a class="asset" href="assets/board-bg.png" target="_blank"><img src="assets/board-bg.png" alt="Board background" /><b>Board background</b><small>棋盘容器</small></a>
+        </div>
+      </div></section>
+
+      <section class="section" id="audio" data-search="音频 BGM 音效 白噪音 combo win fail">
+        <div class="section-head"><div><div class="section-kicker">08 · Sound map</div><h2>音频资源清单</h2><div class="section-lead">资源包中包含 BGM、白噪音和大量局内反馈音效。当前 APK 使用 Godot 音频流格式，网页端保留资源索引和产品用途，不伪造不可播放的音频控件。</div></div><span class="tag">Audio map</span></div>
+        <div class="audio-list"><div class="audio"><div class="audio-icon">♫</div><div><b>bgm_cute</b><span>轻松 / 主界面</span></div></div><div class="audio"><div class="audio-icon">♫</div><div><b>bgm_afternoon_tea</b><span>午后 / 氛围</span></div></div><div class="audio"><div class="audio-icon">♫</div><div><b>bgm_meditation</b><span>冥想 / 放松</span></div></div><div class="audio"><div class="audio-icon">◌</div><div><b>bgm_white_noise</b><span>白噪音 / 长时间陪伴</span></div></div><div class="audio"><div class="audio-icon">✦</div><div><b>level_win</b><span>通关 / 庆祝</span></div></div><div class="audio"><div class="audio-icon">×</div><div><b>level_fail</b><span>失败 / 结果反馈</span></div></div><div class="audio"><div class="audio-icon">●</div><div><b>mark_cat</b><span>放置猫咪</span></div></div><div class="audio"><div class="audio-icon">1</div><div><b>combo_nice / great</b><span>连击 1—5</span></div></div><div class="audio"><div class="audio-icon">9</div><div><b>combo_perfect / unbelievable</b><span>高连击</span></div></div></div>
+      </section>
+
+      <section class="section alt" id="qa" data-search="研发验收 QA 交付 检查清单">
+        <div class="section-inner"><div class="section-head"><div><div class="section-kicker">09 · Delivery</div><h2>研发交付与验收</h2><div class="section-lead">这份清单可以直接作为评审会议的入口，也可以拆成客户端、QA、商业化和服务端任务。</div></div><span class="tag green">Ready to align</span></div>
+        <div class="qa"><div><h4>主玩法</h4><p>规则判断、完成/失败、道具、连击、残局恢复可用。</p></div><span class="tag green">P0</span></div>
+        <div class="qa"><div><h4>外围玩法</h4><p>Splash、Tutorial、Home、Daily、Settings、Streak、Win、Fail 流程闭环。</p></div><span class="tag green">P0</span></div>
+        <div class="qa"><div><h4>多语言与平板</h4><p>语言持久化、关键文案完整；10:16 竖屏下棋盘和操作区完整可用。</p></div><span class="tag blue">P1</span></div>
+        <div class="qa"><div><h4>广告与奖励</h4><p>广告失败不阻断；奖励不重复、不丢失；补发状态可通过测试包构造。</p></div><span class="tag blue">P1</span></div>
+        <div class="qa"><div><h4>服务端边界</h4><p>离线可玩，远程配置失败有默认值；当前不依赖关卡服务端接口。</p></div><span class="tag green">P0</span></div>
+        </div>
+      </section>
+
+      <section class="section" id="not-included" data-search="当前版本不包含 范围外 排行榜 CMS 内购 账号 横屏">
+        <div class="section-head"><div><div class="section-kicker">Scope guardrail</div><h2>当前版本不包含</h2><div class="section-lead">这些不是“永远不做”，而是避免在首版研发中产生默认假设。</div></div></div>
+        <div class="grid-3"><div class="card"><h4>在线竞争</h4><p>在线排行榜、Bot 分组、赛季升降段和排名结算。</p></div><div class="card"><h4>实时内容</h4><p>CMS 实时关卡、在线题库运营和远程图片/视频预加载。</p></div><div class="card"><h4>账户商业化</h4><p>商品购买、订阅、权益恢复、账号登录和云端进度同步。</p></div></div>
+      </section>
+
+      <footer class="footer">Meowdoku · Product requirement &amp; engineering blueprint · 资源预览来自当前应用资源包</footer>
+    </div>
+  </div>
+  <div id="searchEmpty" class="search-empty hidden">没有找到匹配内容。试试搜索“Daily”“道具”“广告”或“存档”。</div>
+  <script>
+    const board = document.getElementById('boardDemo');
+    const cats = new Set([0, 9, 18, 27, 36, 45, 54, 63]);
+    const marks = new Set([1, 2, 8, 10, 16, 17, 19, 26, 35, 44, 53, 62]);
+    for (let i = 0; i < 64; i++) {
+      const cell = document.createElement('button');
+      cell.className = 'cell' + (cats.has(i) ? ' cat' : '') + (marks.has(i) ? ' mark' : '');
+      cell.setAttribute('aria-label', `棋盘第 ${Math.floor(i / 8) + 1} 行第 ${i % 8 + 1} 列`);
+      cell.addEventListener('click', () => cell.classList.toggle('cat'));
+      board.appendChild(cell);
+    }
+
+    const search = document.getElementById('search');
+    const sections = [...document.querySelectorAll('[data-search]')];
+    const empty = document.getElementById('searchEmpty');
+    search.addEventListener('input', () => {
+      const q = search.value.trim().toLowerCase();
+      let count = 0;
+      sections.forEach(section => {
+        const matched = !q || section.dataset.search.toLowerCase().includes(q) || section.textContent.toLowerCase().includes(q);
+        section.classList.toggle('hidden', !matched);
+        if (matched) count++;
+      });
+      empty.classList.toggle('hidden', count > 0);
+    });
+
+    const navLinks = [...document.querySelectorAll('.nav a[href^="#"]')];
+    const watched = [...document.querySelectorAll('section[id]')];
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id));
+      });
+    }, { rootMargin: '-20% 0px -65% 0px' });
+    watched.forEach(section => observer.observe(section));
+  </script>
+</body>
+</html>
