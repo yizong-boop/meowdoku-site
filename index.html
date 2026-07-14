@@ -255,7 +255,7 @@
 
       <section class="section" id="core" data-search="主玩法 规则 棋盘 猫咪 行 列 相邻 颜色 关卡 难度 题库 道具 存档 分数 连击 百分比 玩家">
         <div class="section-head"><div><div class="section-kicker">02 · Core loop</div><h2>主玩法：每一步都可解释</h2><div class="section-lead">核心目标不是让玩家“试出来”，而是让每次正确放置都能被规则支持。错误应当有反馈，但不能让玩家迷失。</div></div><span class="tag green">P0 · 必须稳定</span></div>
-        <div class="callout"><div>⌁</div><div><strong>本版实现基线</strong>动态难度和连击已按 APK 静态代码重新核对。页面中的“已确认”只代表代码/资源可证明；远程 AB 实际命中组、音效时序和设备表现仍需真机或线上配置验证。</div></div>
+        <div class="callout"><div>⌁</div><div><strong>本版实现基线</strong>动态难度、连击、草稿和自动标记已按 APK 静态代码重新核对。页面中的“已确认”只代表代码/资源可证明；远程 AB 实际命中组、入口是否展示、音效时序和设备表现仍需真机或线上配置验证。</div></div>
         <h3>2.1 一局游戏怎么发生 <a class="anchor" href="#core">#</a></h3>
         <div class="flow"><span class="step">Home</span><span class="arrow">→</span><span class="step">Play Level</span><span class="arrow">→</span><span class="step">棋盘加载</span><span class="arrow">→</span><span class="step">放置 / 标记 / 道具</span><span class="arrow">→</span><span class="step">Win / Fail</span><span class="arrow">→</span><span class="step">下一关或恢复</span></div>
         <div class="grid-2">
@@ -294,7 +294,8 @@
           <div class="card icon-card"><img src="assets/locate-light.png" alt="Locate" /><div><span class="tag blue">Locate</span><h4>定位正确位置</h4><p>揭示一个可放置的正确位置，帮助玩家继续游戏。</p></div></div>
           <div class="card icon-card"><img src="assets/undo.png" alt="Undo" /><div><span class="tag green">Undo</span><h4>撤销最近操作</h4><p>普通关和 Daily 共享库存，AB 可配置为免费。</p></div></div>
         </div>
-        <div class="grid-2" style="margin-top:16px"><div class="card soft"><h4>草稿模式</h4><p>中后段开放。玩家记录候选位置，支持冲突检测、提交、清除和按配置恢复。</p></div><div class="card soft"><h4>自动标记</h4><p>根据已放置猫咪自动标记不可用位置，首次使用展示引导；Daily 可配置为激励视频解锁。</p></div></div>
+        <div class="grid-2" style="margin-top:16px"><div class="card soft"><span class="tag">代码存在 / 默认关闭</span><h4>草稿模式</h4><p><code>draft_mode=0</code> 时入口隐藏；只有 AB 覆盖为非 0 且主线关卡 ≥21 才显示玩法页内入口。支持点击、双击、滑动记录草稿，提交时才写入正式棋盘；是否保留由模式值决定。</p></div><div class="card soft"><span class="tag blue">代码存在 / AB 分流</span><h4>自动标记</h4><p><code>game_auto_mark=2</code> 需要主线 &gt;30 关，通过行/列轴按钮标记；<code>=5</code> 只在 Daily 入口弹窗，首次免费，之后看 <code>autox_reward</code> 广告解锁当日能力。控制组不会显示。</p></div></div>
+        <div class="callout"><div>?</div><div><strong>当前版本为什么看不到</strong>草稿默认值为 0，且内置 AB 配置没有发现有效的 <code>draft_mode</code> 分组；自动标记的内置配置存在控制组 0、模式 2 和模式 5，但静态代码无法确认当前设备命中哪组。测试时需先用 AB 覆盖，再满足关卡/Daily 条件并重新进入页面。</div></div>
         <div class="callout"><div>!</div><div><strong>与动态难度的关系</strong>静态代码明确将 Hint、Locate、返回 Home / Restart 标记为 dirty；因此不能把“使用道具是否影响 clean win”写成完全由 AB 决定。Undo 的 dirty 影响在当前已导出代码中未发现明确标记，需真机或进一步运行时验证。</div></div>
 
         <h3>2.5 生命、连击和结算 <a class="anchor" href="#core">#</a></h3>
