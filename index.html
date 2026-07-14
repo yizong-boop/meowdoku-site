@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#fffaf3" />
+  <link rel="icon" href="assets/icon.png" />
   <title>Meowdoku · 产品需求与研发蓝图</title>
   <style>
     :root {
@@ -85,6 +86,7 @@
     .section.alt { max-width: none; background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
     .section-inner { max-width: 1110px; margin: auto; }
     .section-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 26px; }
+    .section-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
     .section-kicker { color: var(--orange); font-size: 12px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
     h2 { margin: 6px 0 0; font-size: clamp(28px, 4vw, 42px); line-height: 1.16; letter-spacing: -.035em; }
     h3 { margin: 30px 0 12px; font-size: 21px; line-height: 1.3; letter-spacing: -.02em; }
@@ -164,6 +166,7 @@
       .topbar { top: 0; }
       .hero-grid { grid-template-columns: 1fr; }
       .asset-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .section-actions { justify-content: flex-start; }
     }
     @media (max-width: 640px) {
       .topbar { align-items: flex-start; flex-direction: column; gap: 8px; }
@@ -215,7 +218,8 @@
         <p>Meowdoku 是一款猫咪主题的轻量逻辑拼图。玩家在不同尺寸的棋盘上放置猫咪，逐步满足行、列、相邻和颜色区域规则；主线负责成长，Daily 负责每天回来。</p>
         <div class="hero-actions">
           <a class="btn primary" href="#core">从主玩法开始 →</a>
-          <a class="btn ghost" href="#assets">查看资源预览</a>
+          <a class="btn ghost" href="#assets">查看精选资源</a>
+          <a class="btn primary" href="resources.html">浏览全部资源 →</a>
         </div>
         <div class="hero-grid">
           <div class="hero-art">
@@ -345,7 +349,7 @@
       </section>
 
       <section class="section alt" id="assets" data-search="资源 图片 猫咪 胜利 道具 生命 预览 截图">
-        <div class="section-inner"><div class="section-head"><div><div class="section-kicker">07 · Asset library</div><h2>实际资源预览</h2><div class="section-lead">以下素材来自当前应用资源包，帮助产品、设计和研发快速建立视觉共识。点击图片可以在浏览器中查看大图；合适的真机页面截图后续再补入。</div></div><span class="tag blue">APK assets</span></div>
+        <div class="section-inner"><div class="section-head"><div><div class="section-kicker">07 · Asset library</div><h2>精选资源预览</h2><div class="section-lead">以下是便于快速建立视觉共识的代表性素材。完整的 528 条资源记录、所有可播放音频、Spine 组成文件和多语言/关卡资源，请进入全量资源考察站。</div></div><div class="section-actions"><span class="tag blue">APK assets</span><a class="btn primary" href="resources.html">浏览全部资源 →</a></div></div>
         <div class="asset-grid">
           <a class="asset" href="assets/icon.png" target="_blank"><img src="assets/icon.png" alt="App icon" /><b>App icon</b><small>产品识别</small></a>
           <a class="asset" href="assets/logo.png" target="_blank"><img src="assets/logo.png" alt="Logo" /><b>Logo</b><small>启动与品牌</small></a>
@@ -366,7 +370,7 @@
       </div></section>
 
       <section class="section" id="audio" data-search="音频 BGM 音效 白噪音 combo win fail">
-        <div class="section-head"><div><div class="section-kicker">08 · Sound map</div><h2>音频资源清单</h2><div class="section-lead">资源包中包含 BGM、白噪音和大量局内反馈音效。当前 APK 使用 Godot 音频流格式，网页端保留资源索引和产品用途，不伪造不可播放的音频控件。</div></div><span class="tag">Audio map</span></div>
+        <div class="section-head"><div><div class="section-kicker">08 · Sound map</div><h2>音频资源清单</h2><div class="section-lead">资源包中包含 BGM、白噪音和大量局内反馈音效。已通过 Godot 资源恢复为浏览器可直接试听的 OGG；全部 82 条音频可在全量资源考察站中筛选。</div></div><div class="section-actions"><span class="tag">Audio map</span><a class="btn primary" href="resources.html?kind=audio">试听全部音频 →</a></div></div>
         <div class="audio-list"><div class="audio"><div class="audio-icon">♫</div><div><b>bgm_cute</b><span>轻松 / 主界面</span></div></div><div class="audio"><div class="audio-icon">♫</div><div><b>bgm_afternoon_tea</b><span>午后 / 氛围</span></div></div><div class="audio"><div class="audio-icon">♫</div><div><b>bgm_meditation</b><span>冥想 / 放松</span></div></div><div class="audio"><div class="audio-icon">◌</div><div><b>bgm_white_noise</b><span>白噪音 / 长时间陪伴</span></div></div><div class="audio"><div class="audio-icon">✦</div><div><b>level_win</b><span>通关 / 庆祝</span></div></div><div class="audio"><div class="audio-icon">×</div><div><b>level_fail</b><span>失败 / 结果反馈</span></div></div><div class="audio"><div class="audio-icon">●</div><div><b>mark_cat</b><span>放置猫咪</span></div></div><div class="audio"><div class="audio-icon">1</div><div><b>combo_nice / great</b><span>连击 1—5</span></div></div><div class="audio"><div class="audio-icon">9</div><div><b>combo_perfect / unbelievable</b><span>高连击</span></div></div></div>
       </section>
 
