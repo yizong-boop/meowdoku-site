@@ -44,8 +44,12 @@
     .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:15px; }
     .card { min-width:0; overflow:hidden; border:1px solid var(--line); border-radius:16px; background:#fff; box-shadow:0 5px 20px rgba(49,70,96,.045); transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease; }
     .card:hover { transform:translateY(-2px); border-color:#cbdafa; box-shadow:0 14px 30px rgba(49,70,96,.11); }
-    .thumb { position:relative; display:grid; place-items:center; height:185px; padding:12px; overflow:hidden; background:repeating-conic-gradient(#f8fafc 0 25%,#f2f5f9 0 50%) 50%/22px 22px; }
-    .thumb img { width:100%; height:100%; object-fit:contain; }
+    .thumb { position:relative; display:grid; place-items:center; height:220px; padding:16px; overflow:hidden; background:repeating-conic-gradient(#f8fafc 0 25%,#f2f5f9 0 50%) 50%/22px 22px; }
+    .thumb img { display:block; width:auto; height:auto; max-width:100%; max-height:100%; object-fit:contain; }
+    .visual-placeholder { display:grid; place-items:center; gap:6px; min-width:116px; min-height:86px; padding:16px; border:1px solid rgba(91,141,239,.13); border-radius:18px; color:#6e88aa; text-align:center; background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(238,245,255,.86)); }
+    .visual-placeholder strong { color:#55749e; font-size:13px; }
+    .visual-placeholder span { color:#8a98aa; font-size:11px; }
+    .preview-note { position:absolute; right:10px; bottom:9px; padding:3px 7px; border:1px solid rgba(219,228,240,.8); border-radius:6px; color:#73839a; font-size:10px; background:rgba(255,255,255,.84); }
     .thumb.audio-thumb { height:132px; background:linear-gradient(135deg,#f3f8ff,#eefbf7); }
     .audio-mark { display:grid; place-items:center; width:56px; height:56px; border-radius:50%; color:#4f85d8; background:#fff; box-shadow:0 8px 18px rgba(79,133,216,.15); font-size:25px; }
     .thumb .tag { position:absolute; top:10px; left:10px; padding:3px 7px; border-radius:6px; color:#537091; font-size:11px; background:rgba(255,255,255,.88); }
@@ -63,8 +67,13 @@
     .modal { position:fixed; inset:0; z-index:10; display:none; place-items:center; padding:24px; background:rgba(33,47,69,.42); }
     .modal.open { display:grid; }
     .dialog { display:grid; grid-template-columns:minmax(300px,1fr) minmax(280px,390px); width:min(980px,100%); max-height:min(750px,92vh); overflow:hidden; border-radius:20px; background:#fff; box-shadow:0 24px 80px rgba(18,29,46,.25); }
-    .dialog-preview { display:grid; place-items:center; min-height:330px; padding:30px; overflow:hidden; background:repeating-conic-gradient(#f8fafc 0 25%,#f0f4f8 0 50%) 50%/28px 28px; }
-    .dialog-preview img { max-width:100%; max-height:68vh; object-fit:contain; }
+    .dialog-preview { position:relative; display:flex; align-items:center; justify-content:center; min-height:330px; padding:54px 30px 30px; overflow:auto; background:repeating-conic-gradient(#f8fafc 0 25%,#f0f4f8 0 50%) 50%/28px 28px; }
+    .dialog-preview img { display:block; width:auto; height:auto; max-width:100%; max-height:68vh; object-fit:contain; }
+    .dialog-preview.raw { align-items:flex-start; justify-content:flex-start; }
+    .dialog-preview.raw img { max-width:none; max-height:none; }
+    .preview-tools { position:absolute; top:13px; left:16px; display:flex; gap:6px; z-index:1; }
+    .preview-tools button { padding:5px 9px; border:1px solid #d9e3f0; border-radius:8px; color:#5c7392; background:rgba(255,255,255,.9); }
+    .preview-tools button.active,.preview-tools button:hover { border-color:#9bbaf4; color:#356ac4; background:#edf4ff; }
     .dialog-side { position:relative; overflow:auto; padding:28px; }
     .close { position:absolute; top:16px; right:16px; width:32px; height:32px; border:0; border-radius:50%; color:#66758b; background:#f2f5f8; }
     .dialog-side h2 { margin:0 40px 17px 0; font-size:23px; line-height:1.2; }
@@ -74,8 +83,8 @@
     .detail-list dd { margin:2px 0 0; color:#43536b; word-break:break-all; }
     .dialog-side a { display:inline-block; margin-top:18px; padding:9px 13px; border-radius:10px; color:#fff; text-decoration:none; background:var(--blue); }
     @media (max-width:1100px) { .grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
-    @media (max-width:760px) { .topbar { padding:13px 5vw; } .top-links a:first-child { display:none; } main { padding-top:32px; } .hero { display:block; } .hero-note { margin-top:20px; } .stats { grid-template-columns:repeat(2,1fr); } .stats .stat:last-child { grid-column:span 2; } .grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .thumb { height:145px; } .dialog { grid-template-columns:1fr; max-height:92vh; overflow:auto; } .dialog-preview { min-height:240px; max-height:42vh; } }
-    @media (max-width:460px) { .grid { grid-template-columns:1fr; } .thumb { height:190px; } }
+    @media (max-width:760px) { .topbar { padding:13px 5vw; } .top-links a:first-child { display:none; } main { padding-top:32px; } .hero { display:block; } .hero-note { margin-top:20px; } .stats { grid-template-columns:repeat(2,1fr); } .stats .stat:last-child { grid-column:span 2; } .grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .thumb { height:165px; padding:12px; } .dialog { grid-template-columns:1fr; max-height:92vh; overflow:auto; } .dialog-preview { min-height:240px; max-height:42vh; } }
+    @media (max-width:460px) { .grid { grid-template-columns:1fr; } .thumb { height:200px; } }
   </style>
 </head>
 <body>
@@ -152,9 +161,15 @@
       return image ? image.preview : null;
     }
 
+    function placeholder(record) {
+      const title = record.kind === 'animation' ? (record.animationGroup ? 'Spine / Godot 动效' : 'Godot 动画资源') : displayKind(record.kind);
+      const detail = record.kind === 'animation' && record.animationGroup ? record.animationGroup : (record.status || '暂无静态预览');
+      return `<div class="visual-placeholder"><strong>${esc(title)}</strong><span>${esc(detail)}</span></div>`;
+    }
+
     function card(record) {
       const preview = groupPreview(record, state.records);
-      let visual = record.kind === 'audio' ? `<div class="audio-mark">♫</div>` : preview ? `<img loading="lazy" src="${esc(preview)}" alt="${esc(record.file)}">` : `<div class="audio-mark">${record.kind === 'animation' ? '✦' : '·'}</div>`;
+      let visual = record.kind === 'audio' ? `<div class="audio-mark">♫</div>` : preview ? `<img loading="lazy" src="${esc(preview)}" alt="${esc(record.file)}"><span class="preview-note">${record.kind === 'animation' ? '关联纹理' : '完整预览'}</span>` : placeholder(record);
       const thumbClass = record.kind === 'audio' ? 'thumb audio-thumb' : 'thumb';
       const meta = [record.width && record.height ? `${record.width} × ${record.height}` : '', record.duration ? duration(record.duration) : '', record.sizeLabel, record.animationGroup ? '动画组' : ''].filter(Boolean).map(item => `<span>${esc(item)}</span>`).join('');
       const audio = record.kind === 'audio' ? `<audio controls preload="none" src="${esc(record.preview)}"></audio>` : '';
@@ -172,7 +187,14 @@
       const record = state.records.find(item => item.id === id); if (!record) return;
       const preview = groupPreview(record, state.records);
       $('dialog-title').textContent = record.file;
-      $('dialog-preview').innerHTML = record.kind === 'audio' ? `<div><div class="audio-mark">♫</div><audio controls autoplay src="${esc(record.preview)}"></audio></div>` : preview ? `<img src="${esc(preview)}" alt="${esc(record.file)}">` : `<div class="audio-mark">${record.kind === 'animation' ? '✦' : '·'}</div>`;
+      const previewHtml = record.kind === 'audio' ? `<div><div class="audio-mark">♫</div><audio controls autoplay src="${esc(record.preview)}"></audio></div>` : preview ? `<img src="${esc(preview)}" alt="${esc(record.file)}"><div class="preview-tools"><button class="active" data-preview-mode="fit">适应窗口</button><button data-preview-mode="raw">原始尺寸</button></div>` : placeholder(record);
+      $('dialog-preview').className = 'dialog-preview';
+      $('dialog-preview').innerHTML = previewHtml;
+      $('dialog-preview').querySelectorAll('[data-preview-mode]').forEach(button => button.addEventListener('click', () => {
+        const raw = button.dataset.previewMode === 'raw';
+        $('dialog-preview').classList.toggle('raw', raw);
+        $('dialog-preview').querySelectorAll('[data-preview-mode]').forEach(item => item.classList.toggle('active', item === button));
+      }));
       const rows = [['类型',record.type],['模块',record.module],['原始路径',record.path],['文件大小',record.sizeLabel],['状态',record.status]];
       if (record.width) rows.push(['尺寸',`${record.width} × ${record.height}`]);
       if (record.duration) rows.push(['时长',duration(record.duration)]);
