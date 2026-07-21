@@ -1,0 +1,308 @@
+{
+  "generatedAt": "2026-07-21T07:51:06.505Z",
+  "runtime": "Spine 4.2.43 + spine-canvas",
+  "previews": [
+    {
+      "group": "spine/ui_box01",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_box01/Box_Down.skel",
+      "animation": "Appear",
+      "duration": 2.667,
+      "allAnimations": [
+        {
+          "name": "Appear",
+          "duration": 2.667
+        },
+        {
+          "name": "Click",
+          "duration": 0.733
+        },
+        {
+          "name": "Loop",
+          "duration": 0
+        }
+      ],
+      "width": 947,
+      "height": 880,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-box01-box-down.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-box01-box-down.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-box01-box-down.png"
+    },
+    {
+      "group": "spine/ui_box01",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_box01/Box_Up.skel",
+      "animation": "Appear",
+      "duration": 2.667,
+      "allAnimations": [
+        {
+          "name": "Appear",
+          "duration": 2.667
+        },
+        {
+          "name": "Click",
+          "duration": 0.733
+        },
+        {
+          "name": "Loop",
+          "duration": 0
+        }
+      ],
+      "width": 1418,
+      "height": 1943,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-box01-box-up.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-box01-box-up.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-box01-box-up.png"
+    },
+    {
+      "group": "spine/ui_cat_icon",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_cat_icon/maomi_fuor.skel",
+      "animation": "idle",
+      "duration": 2.667,
+      "allAnimations": [
+        {
+          "name": "Appear",
+          "duration": 1.333
+        },
+        {
+          "name": "cry",
+          "duration": 2.6
+        },
+        {
+          "name": "frustrated",
+          "duration": 3.167
+        },
+        {
+          "name": "idle",
+          "duration": 2.667
+        },
+        {
+          "name": "sad",
+          "duration": 2.367
+        },
+        {
+          "name": "shakehead",
+          "duration": 2.2
+        },
+        {
+          "name": "surprise",
+          "duration": 1.9
+        }
+      ],
+      "width": 430,
+      "height": 367,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-cat-icon-maomi-fuor.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-cat-icon-maomi-fuor.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-cat-icon-maomi-fuor.png"
+    },
+    {
+      "group": "spine/ui_fail_settlement",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_fail_settlement/failure.skel",
+      "animation": "idle",
+      "duration": 3.167,
+      "allAnimations": [
+        {
+          "name": "idle",
+          "duration": 3.167
+        },
+        {
+          "name": "in",
+          "duration": 1.9
+        }
+      ],
+      "width": 806,
+      "height": 1012,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-fail-settlement-failure.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-fail-settlement-failure.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-fail-settlement-failure.png"
+    },
+    {
+      "group": "spine/ui_fail_settlement1",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_fail_settlement1/failure_group1.skel",
+      "animation": "idle",
+      "duration": 3.167,
+      "allAnimations": [
+        {
+          "name": "idle",
+          "duration": 3.167
+        },
+        {
+          "name": "in",
+          "duration": 1.9
+        }
+      ],
+      "width": 806,
+      "height": 1012,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-fail-settlement1-failure-group1.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-fail-settlement1-failure-group1.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-fail-settlement1-failure-group1.png"
+    },
+    {
+      "group": "spine/ui_like_hand/LikeHand_4",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_like_hand/LikeHand_4/LikeHand_4.skel",
+      "animation": "Loop",
+      "duration": 1.067,
+      "allAnimations": [
+        {
+          "name": "Loop",
+          "duration": 1.067
+        }
+      ],
+      "width": 790,
+      "height": 616,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-likehand-4-likehand-4.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-likehand-4-likehand-4.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-likehand-4-likehand-4.png"
+    },
+    {
+      "group": "spine/ui_like_hand/LikeHand_5",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_like_hand/LikeHand_5/LikeHand_5.skel",
+      "animation": "Appear",
+      "duration": 1.067,
+      "allAnimations": [
+        {
+          "name": "Appear",
+          "duration": 1.067
+        }
+      ],
+      "width": 467,
+      "height": 546,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-likehand-5-likehand-5.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-likehand-5-likehand-5.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-likehand-5-likehand-5.png"
+    },
+    {
+      "group": "spine/ui_like_hand/LinkeHand_1",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_like_hand/LinkeHand_1/LikeHand_1.skel",
+      "animation": "Loop",
+      "duration": 1,
+      "allAnimations": [
+        {
+          "name": "Loop",
+          "duration": 0.7
+        }
+      ],
+      "width": 395,
+      "height": 516,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-linkehand-1-likehand-1.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-linkehand-1-likehand-1.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-linkehand-1-likehand-1.png"
+    },
+    {
+      "group": "spine/ui_like_hand/LinkeHand_2",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_like_hand/LinkeHand_2/LikeHand_2.skel",
+      "animation": "Loop",
+      "duration": 1.067,
+      "allAnimations": [
+        {
+          "name": "Loop",
+          "duration": 1.067
+        }
+      ],
+      "width": 545,
+      "height": 435,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-linkehand-2-likehand-2.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-linkehand-2-likehand-2.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-linkehand-2-likehand-2.png"
+    },
+    {
+      "group": "spine/ui_like_hand/LinkeHand_3",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_like_hand/LinkeHand_3/LikeHand_3.skel",
+      "animation": "Loop",
+      "duration": 1.067,
+      "allAnimations": [
+        {
+          "name": "Loop",
+          "duration": 1.067
+        }
+      ],
+      "width": 630,
+      "height": 472,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-linkehand-3-likehand-3.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-linkehand-3-likehand-3.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-like-hand-linkehand-3-likehand-3.png"
+    },
+    {
+      "group": "spine/ui_logo",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_logo/logo.skel",
+      "animation": "Appear",
+      "duration": 1,
+      "allAnimations": [
+        {
+          "name": "Appear",
+          "duration": 0.833
+        },
+        {
+          "name": "idle",
+          "duration": 0
+        }
+      ],
+      "width": 905,
+      "height": 501,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-logo-logo.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-logo-logo.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-logo-logo.png"
+    },
+    {
+      "group": "spine/ui_win_settlement",
+      "source": "meowdoku_site/assets/catalog/effect/spine/ui_win_settlement/game_win_result.skel",
+      "animation": "idle",
+      "duration": 3.167,
+      "allAnimations": [
+        {
+          "name": "appear",
+          "duration": 2.5
+        },
+        {
+          "name": "idle",
+          "duration": 3.167
+        }
+      ],
+      "width": 1142,
+      "height": 1138,
+      "gif": "meowdoku_site/assets/animation-previews/spine-ui-win-settlement-game-win-result.gif",
+      "webm": "meowdoku_site/assets/animation-previews/spine-ui-win-settlement-game-win-result.webm",
+      "poster": "meowdoku_site/assets/animation-previews/spine-ui-win-settlement-game-win-result.png"
+    },
+    {
+      "group": "texture/ui_guide",
+      "source": "meowdoku_site/assets/catalog/effect/texture/ui_guide/ui_guide_hand.skel",
+      "animation": "idle",
+      "duration": 1,
+      "allAnimations": [
+        {
+          "name": "click",
+          "duration": 1.4
+        },
+        {
+          "name": "idle",
+          "duration": 0.333
+        }
+      ],
+      "width": 388,
+      "height": 475,
+      "gif": "meowdoku_site/assets/animation-previews/texture-ui-guide-ui-guide-hand.gif",
+      "webm": "meowdoku_site/assets/animation-previews/texture-ui-guide-ui-guide-hand.webm",
+      "poster": "meowdoku_site/assets/animation-previews/texture-ui-guide-ui-guide-hand.png"
+    },
+    {
+      "group": "texture/ui_hand",
+      "source": "meowdoku_site/assets/catalog/effect/texture/ui_hand/ui_guide_hand01.skel",
+      "animation": "idle",
+      "duration": 1,
+      "allAnimations": [
+        {
+          "name": "click",
+          "duration": 1.4
+        },
+        {
+          "name": "idle",
+          "duration": 0.333
+        }
+      ],
+      "width": 387,
+      "height": 474,
+      "gif": "meowdoku_site/assets/animation-previews/texture-ui-hand-ui-guide-hand01.gif",
+      "webm": "meowdoku_site/assets/animation-previews/texture-ui-hand-ui-guide-hand01.webm",
+      "poster": "meowdoku_site/assets/animation-previews/texture-ui-hand-ui-guide-hand01.png"
+    }
+  ]
+}

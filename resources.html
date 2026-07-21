@@ -46,6 +46,7 @@
     .card:hover { transform:translateY(-2px); border-color:#cbdafa; box-shadow:0 14px 30px rgba(49,70,96,.11); }
     .thumb { position:relative; display:grid; place-items:center; height:220px; padding:16px; overflow:hidden; background:repeating-conic-gradient(#f8fafc 0 25%,#f2f5f9 0 50%) 50%/22px 22px; }
     .thumb img { display:block; width:auto; height:auto; max-width:100%; max-height:100%; object-fit:contain; }
+    .thumb video { display:block; width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; border-radius:10px; background:#f4f7fb; }
     .visual-placeholder { display:grid; place-items:center; gap:6px; min-width:116px; min-height:86px; padding:16px; border:1px solid rgba(91,141,239,.13); border-radius:18px; color:#6e88aa; text-align:center; background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(238,245,255,.86)); }
     .visual-placeholder strong { color:#55749e; font-size:13px; }
     .visual-placeholder span { color:#8a98aa; font-size:11px; }
@@ -69,6 +70,7 @@
     .dialog { display:grid; grid-template-columns:minmax(300px,1fr) minmax(280px,390px); width:min(980px,100%); max-height:min(750px,92vh); overflow:hidden; border-radius:20px; background:#fff; box-shadow:0 24px 80px rgba(18,29,46,.25); }
     .dialog-preview { position:relative; display:flex; align-items:center; justify-content:center; min-height:330px; padding:54px 30px 30px; overflow:auto; background:repeating-conic-gradient(#f8fafc 0 25%,#f0f4f8 0 50%) 50%/28px 28px; }
     .dialog-preview img { display:block; width:auto; height:auto; max-width:100%; max-height:68vh; object-fit:contain; }
+    .dialog-preview video { display:block; width:auto; height:auto; max-width:100%; max-height:68vh; object-fit:contain; background:#f4f7fb; }
     .dialog-preview.raw { align-items:flex-start; justify-content:flex-start; }
     .dialog-preview.raw img { max-width:none; max-height:none; }
     .preview-tools { position:absolute; top:13px; left:16px; display:flex; gap:6px; z-index:1; }
@@ -113,7 +115,7 @@
 
     <section class="animation-callout">
       <div class="icon">✦</div>
-      <div><strong>动效格式已确认</strong><p>APK 内没有 GIF、WebM 或 MP4。可见动效主要是 Spine 4.2.43 的 <code>.skel + .atlas + .png</code> 组合，另有 Godot 的 <code>.tres/.res</code> 资源；浏览器页展示静态纹理和组成文件，真正播放仍需 Spine/Godot runtime。</p></div>
+      <div><strong>动效已生成可播放预览</strong><p>APK 原始包没有 GIF/WebM/MP4；可见动效主要是 Spine 4.2.43 的 <code>.skel + .atlas + .png</code> 组合。当前页面已用对应 Spine runtime 渲染出 WebM/GIF 预览，便于直接评估动作和复刻工作量；两条 Godot <code>.res</code> 动画仍需放回 Godot 场景才能准确播放。</p></div>
     </section>
 
     <div class="result-line"><span id="result">正在读取…</span><span>点击卡片查看详情</span></div>
@@ -145,7 +147,7 @@
       const modules = [...new Set(state.records.map(item => item.module))].sort((a,b) => a.localeCompare(b,'zh-CN'));
       $('module').innerHTML += modules.map(item => `<option value="${esc(item)}">${esc(item)}</option>`).join('');
       $('filters').innerHTML = ['all',...Object.keys(labels).filter(item => item !== 'all' && counts[item])].map(item => `<button class="filter ${item === state.kind ? 'active' : ''}" data-kind="${item}">${labels[item]} <small>${item === 'all' ? state.records.length : counts[item]}</small></button>`).join('');
-      $('source-note').textContent = '共 ' + state.records.length + ' 条记录；图片、音频已导出为浏览器可预览格式。';
+      $('source-note').textContent = '共 ' + state.records.length + ' 条记录；图片、音频和 Spine 动效已导出为浏览器可预览格式。';
       render();
     }
 
@@ -155,6 +157,7 @@
     }
 
     function groupPreview(record, records) {
+      if (record.animationPreview) return record.animationPreview;
       if (record.preview) return record.preview;
       if (!record.animationGroup) return null;
       const image = records.find(item => item.kind === 'image' && item.animationGroup === record.animationGroup);
@@ -169,9 +172,9 @@
 
     function card(record) {
       const preview = groupPreview(record, state.records);
-      let visual = record.kind === 'audio' ? `<div class="audio-mark">♫</div>` : preview ? `<img loading="lazy" src="${esc(preview)}" alt="${esc(record.file)}"><span class="preview-note">${record.kind === 'animation' ? '关联纹理' : '完整预览'}</span>` : placeholder(record);
+      let visual = record.kind === 'audio' ? `<div class="audio-mark">♫</div>` : record.kind === 'animation' && record.animationPreview ? `<video autoplay muted loop playsinline preload="metadata" poster="${esc(record.animationPreviewPoster || '')}" src="${esc(record.animationPreview)}"></video><span class="preview-note">Spine 动画预览</span>` : preview ? `<img loading="lazy" src="${esc(preview)}" alt="${esc(record.file)}"><span class="preview-note">${record.kind === 'animation' ? '关联纹理' : '完整预览'}</span>` : placeholder(record);
       const thumbClass = record.kind === 'audio' ? 'thumb audio-thumb' : 'thumb';
-      const meta = [record.width && record.height ? `${record.width} × ${record.height}` : '', record.duration ? duration(record.duration) : '', record.sizeLabel, record.animationGroup ? '动画组' : ''].filter(Boolean).map(item => `<span>${esc(item)}</span>`).join('');
+      const meta = [record.width && record.height ? `${record.width} × ${record.height}` : '', record.duration ? duration(record.duration) : '', record.sizeLabel, record.animationGroup ? '动画组' : '', record.animationPreview ? '可播放预览' : ''].filter(Boolean).map(item => `<span>${esc(item)}</span>`).join('');
       const audio = record.kind === 'audio' ? `<audio controls preload="none" src="${esc(record.preview)}"></audio>` : '';
       return `<article class="card" data-id="${esc(record.id)}"><div class="${thumbClass}">${visual}<span class="tag">${esc(record.module)}</span></div><div class="card-body"><div class="card-head"><h3 title="${esc(record.file)}">${esc(record.file)}</h3><span class="kind ${record.kind}">${esc(record.type)}</span></div><div class="path">${esc(record.path)}</div><div class="meta">${meta}</div>${audio}</div></article>`;
     }
@@ -187,7 +190,7 @@
       const record = state.records.find(item => item.id === id); if (!record) return;
       const preview = groupPreview(record, state.records);
       $('dialog-title').textContent = record.file;
-      const previewHtml = record.kind === 'audio' ? `<div><div class="audio-mark">♫</div><audio controls autoplay src="${esc(record.preview)}"></audio></div>` : preview ? `<img src="${esc(preview)}" alt="${esc(record.file)}"><div class="preview-tools"><button class="active" data-preview-mode="fit">适应窗口</button><button data-preview-mode="raw">原始尺寸</button></div>` : placeholder(record);
+      const previewHtml = record.kind === 'audio' ? `<div><div class="audio-mark">♫</div><audio controls autoplay src="${esc(record.preview)}"></audio></div>` : record.kind === 'animation' && record.animationPreview ? `<video controls autoplay muted loop playsinline poster="${esc(record.animationPreviewPoster || '')}" src="${esc(record.animationPreview)}"></video>` : preview ? `<img src="${esc(preview)}" alt="${esc(record.file)}"><div class="preview-tools"><button class="active" data-preview-mode="fit">适应窗口</button><button data-preview-mode="raw">原始尺寸</button></div>` : placeholder(record);
       $('dialog-preview').className = 'dialog-preview';
       $('dialog-preview').innerHTML = previewHtml;
       $('dialog-preview').querySelectorAll('[data-preview-mode]').forEach(button => button.addEventListener('click', () => {
